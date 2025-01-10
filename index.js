@@ -79,7 +79,7 @@ const client = new MongoClient(uri, {
 //database & collection name
 const db = client.db("HospitalityMeals");
 const userCollection = db.collection("AllUsers");
-const productCollection = db.collection("Product");
+const patientCollection = db.collection("Patient");
 
 async function run() {
   try {
@@ -106,10 +106,26 @@ async function run() {
       res.send(result);
     });
 
+  //patient related api
+  app.post("/addPatientDetais", async (req, res) => {
+    const item = req.body;
+    // console.log("user:  ",user)
+    const result = await patientCollection.insertOne(item);
+    res.send(result);
+  });
+
+
+
+
+
+
+
+
+
 
     app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
-      // console.log(email)
+      console.log(email)
       //   if (email !== req.decoded.email) {
       //     return res.status(403).send({ message: 'forbidden access' })
       // }
@@ -120,14 +136,7 @@ async function run() {
       res.send(user);
     });
 
-    //product related api
-    app.post("/products", verifyToken, verifySeller, async (req, res) => {
-      const item = req.body;
-      // console.log("user:  ",user)
-      const result = await productCollection.insertOne(item);
-      res.send(result);
-    });
-
+  
     //all product fetch for public
     app.get("/all-product", async (req, res) => {
       const { title, sort, category, brand, page = 1, limit = 9 } = req.query;
